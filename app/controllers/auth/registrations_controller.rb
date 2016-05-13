@@ -8,6 +8,15 @@ class Auth::RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  def destroy
+    user = User.find(params[:id])
+    if User.destroy
+      render json: user
+    else
+      render json: user.errors, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def user_params

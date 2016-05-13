@@ -10,4 +10,5 @@ class UsersController < ApplicationController
     render json: User.find(params[:id]), serializer: UserWithoutTokenSerializer
   end
 
+  
 end

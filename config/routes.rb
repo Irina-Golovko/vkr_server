@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   devise_for :users, skip: [:sessions, :registrations]
   devise_scope :user do
     resource :registration, only: [:create, :update, :destroy],
-             path: 'users', controller: 'auth/registrations'
+             controller: 'auth/registrations'
     resource :session, only: [:create], path: 'sign-in',
              controller: 'auth/sessions'
   end
