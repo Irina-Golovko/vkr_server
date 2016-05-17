@@ -21,7 +21,9 @@ gem 'cancancan', '~> 1.10'
 
 gem 'pandoc-ruby'
 
-gem 'puma'
+gem 'unicorn'
+
+gem 'unicorn-rails'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
