@@ -8,11 +8,7 @@ class DocumentsController < ApplicationController
 
   def show
     document = Document.find(params[:id])
-    file = File.open(document.file.current_path, "rb")
-    contents = file.read
-    file.close
-    document.text = contents
-    puts contents
+    document.text = File.open(document.file.current_path) { |file| file.read }
     render json: document
   end
 
@@ -93,23 +89,32 @@ class DocumentsController < ApplicationController
       case params[:type]
         when "html"
           if document.css   
-            f.puts(PandocRuby.new(contents, :standalone, :no_wrap, css: "http://#{request.host_with_port}#{document.css.url}").to_html5)
+            `pandoc #{document.file_identifier} -o #{document.title}.#{params[:type]} --standalone --no-wrap --mathjax --css="http://#{request.host_with_port}#{document.css.url}" -V lang=russianb`
+            # f.puts(PandocRuby.new(contents, :standalone, :no_wrap, :mathjax, css: "http://#{request.host_with_port}#{document.css.url}").to_html5)
           else
-            f.puts(PandocRuby.new(contents, :standalone, :no_wrap).to_html5)
+            `pandoc #{document.file_identifier} -o #{document.title}.#{params[:type]} --standalone --no-wrap --mathjax -V lang=russianb`
+            # f.puts(PandocRuby.new(contents, :standalone, :no_wrap, :mathjax).to_html5)
           end
         when "pdf"
-          `pandoc #{document.file_identifier} -o #{document.title}.#{params[:type]}`
+          `pandoc #{document.file_identifier} -o #{document.title}.#{params[:type]} -V lang=russianb`
           # converter = PandocRuby.new(contents, :from => :markdown, :to => :beamer)
           # f.puts(`#{cmd}`)
           # f.puts converter.convert
         when "latex"
-          f.puts(PandocRuby.new(contents, :standalone).to_latex)
+          # f.puts(PandocRuby.new(contents, :standalone, :mathjax, V: "lang=russianb").to_latex)
+          `pandoc #{document.file_identifier} -o #{document.title}.#{params[:type]} -V lang=russianb`
         when "docx"
-          f.puts(PandocRuby.new(contents, :standalone).to_docx)
-        when "rtf"
-          f.puts(PandocRuby.new(contents, :standalone).to_rtf)
-        when "odc"
-          f.puts(PandocRuby.new(contents, :standalone).to_opendocument)
+          # f.puts(PandocRuby.new(contents, :standalone, :mathjax).to_docx)
+          `pandoc #{document.file_identifier} -o #{document.title}.#{params[:type]} -V lang=russianb`
+        when "fb2"
+          # f.puts(PandocRuby.new(contents, :standalone, :mathjax).to_rtf)
+          `pandoc #{document.file_identifier} -o #{document.title}.#{params[:type]} -V lang=russianb`
+        when "epub"
+          # f.puts(PandocRuby.new(contents, :standalone, :mathjax).to_rtf)
+          `pandoc #{document.file_identifier} -o #{document.title}.#{params[:type]} -V lang=russianb`
+        # when "odc"
+        #   # f.puts(PandocRuby.new(contents, :standalone, :mathjax).to_opendocument)
+        #   `pandoc #{document.file_identifier} -o #{document.title}.#{params[:type]} -V lang=russianb`
       end
       f.close
     }

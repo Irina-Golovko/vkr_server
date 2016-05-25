@@ -24,6 +24,7 @@ gem 'pandoc-ruby'
 gem 'unicorn'
 
 gem 'unicorn-rails'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
